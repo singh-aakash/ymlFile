@@ -35,5 +35,3 @@ spec:
   - port: 80
   selector:
     app: loggingservice-master
-	
-	
