@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loggingservice-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loggingservice-master
+  template:
+    metadata:
+      labels:
+        app: loggingservice-master
+    spec:
+      containers:
+      - name: loggingservice-master
+        image: samplecontainer11.azurecr.io/kararchana/loggingservice:#{Build.BuildId}#
+        ports:
+        - containerPort: 80
+        env:
+          - name: PODNAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+      imagePullSecrets:
+      - name: akslogg
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loggingservice-master
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: loggingservice-master
+	
+	
