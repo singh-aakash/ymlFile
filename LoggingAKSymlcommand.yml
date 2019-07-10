@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: loggingservice-master
-        image: samplecontainer11.azurecr.io/kararchana/loggingservice:#{Build.BuildId}#
+        image: tusharcontainer.azurecr.io/singh-aakash/loggingservice:#{Build.BuildId}#
         ports:
         - containerPort: 80
         env:
@@ -23,7 +23,7 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
       imagePullSecrets:
-      - name: akslogg
+      - name: aksushar
 ---
 apiVersion: v1
 kind: Service
