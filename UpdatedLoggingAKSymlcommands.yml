@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loggingservice-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loggingservice-master
+  template:
+    metadata:
+      labels:
+        app: loggingservice-master
+    spec:
+      containers:
+      - name: loggingservice-master
+        image: tusharcontainer.azurecr.io/singh-aakash/loggingservice:#{Build.BuildId}#
+        ports:
+        - containerPort: 80
+        env:
+          - name: PODNAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+	  - name: SECRETPASSWORD
+  	    valueFrom:
+    		secretKeyRef:
+      		name: secretpassword
+      		key: password
+volumes:
+  - name: secretkey
+    flexVolume:
+      driver: "azure/kv"
+      secretRef:
+        name: kvcreds
+      options:
+        usepodidentity: "false"
+        keyvaultname: secret-key
+        keyvaultobjectnames: password
+        keyvaultobjecttypes: secret
+        resourcegroup: aakash
+        subscriptionid: 12fb850e-dcf6-426e-adac-8e7d449232e8
+        tenantid: 2cb1e65c-d587-4659-b462-c8bbe1a04b4e
+volumeMounts:
+  - name: secret-keys
+    mountPath: /kvmnt
+    readOnly: true
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loggingservice-master
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: loggingservice-master
