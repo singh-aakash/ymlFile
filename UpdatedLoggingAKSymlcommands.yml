@@ -22,7 +22,7 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
-	  - name: SECRETPASSWORD
+- name: SECRETPASSWORD
   	    valueFrom:
     		secretKeyRef:
       		name: secretpassword
